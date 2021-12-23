@@ -71,11 +71,11 @@ namespace mowafi {
             http::write(stream, create_request());
         }
 
-        void read(){
+        std::string read(){
             http::response<http::dynamic_body> response{};
             http::read(stream,buffer, response);
 
-            std::cout << boost::beast::buffers_to_string(response.body().data()) << '\n';
+            return boost::beast::buffers_to_string(response.body().data());
         }
     private:
         std::string         host{};

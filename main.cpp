@@ -4,7 +4,7 @@
 /**
  * @brief Self libs
  */
-//#include "json.hpp"
+#include "json.hpp"
 #include "http_req.hpp"
 
 /*!
@@ -39,19 +39,23 @@ int main() {
     sql::Connection *con;
     sql::Statement *stmt;
 
+    using json = nlohmann::json;
+
     boost::asio::io_context ioc;
     mowafi::Http_Client client("api.openweathermap.org", "/data/2.5/weather?q=London,uk&appid=1a56d882d9fa61dc0b5f7049cda3b0bc", 80, ioc);
     client.create_request();
     client.write();
-    client.read();
+
+    json weather_data = json::parse(client.read());
+    std::cout << std::setw(4) << weather_data << '\n';
 
     driver = sql::mysql::get_mysql_driver_instance();
     con = driver->connect("localhost", "user", "20021212");
     stmt = con->createStatement();
 
-    using namespace fmt::literals;
-    stmt->execute("use Data;");
-    stmt->execute(fmt::format("insert into Weather(Date, Temp) values(\"{date}\", 37.7);", "date"_a = date_request::result()));
+//    using namespace fmt::literals;
+//    stmt->execute("use Data;");
+//    stmt->execute(fmt::format("insert into Weather(Date, Temp) values(\"{date}\", 37.7);", "date"_a = date_request::result()));
 
     delete stmt;
     delete con;
