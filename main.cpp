@@ -6,38 +6,20 @@
  */
 #include "json.hpp"
 #include "http_req.hpp"
+#include "json_converter.hpp"
 
 /*!
  * @brief Database headers
  */
-#include <cppconn/connection.h>
-#include <cppconn/driver.h>
-#include <mysql_driver.h>
-#include <cppconn/statement.h>
-
-#include <fmt/format.h>
-
-struct date_request{
-    static std::string result(){
-        std::chrono::time_point<std::chrono::system_clock> now{std::chrono::system_clock::now()};
-
-        std::chrono::year_month_day ymd{std::chrono::floor<std::chrono::days>(now)};
-
-        using namespace fmt::literals;
-        std::string current_date = fmt::format("{year}-{month}-{day}",
-                                               "year"_a = std::to_string(static_cast<int>(ymd.year())),
-                                               "month"_a = std::to_string(static_cast<unsigned>(ymd.month())),
-                                               "day"_a = std::to_string(static_cast<unsigned>(ymd.day()))
-        );
-
-        return current_date;
-    }
-};
+//#include <cppconn/connection.h>
+//#include <cppconn/driver.h>
+//#include <mysql_driver.h>
+//#include <cppconn/statement.h>
 
 int main() {
-    sql::mysql::MySQL_Driver *driver;
-    sql::Connection *con;
-    sql::Statement *stmt;
+//    sql::mysql::MySQL_Driver *driver;
+//    sql::Connection *con;
+//    sql::Statement *stmt;
 
     using json = nlohmann::json;
 
@@ -49,14 +31,21 @@ int main() {
     json weather_data = json::parse(client.read());
     std::cout << std::setw(4) << weather_data << '\n';
 
-    driver = sql::mysql::get_mysql_driver_instance();
-    con = driver->connect("localhost", "user", "20021212");
-    stmt = con->createStatement();
+    //interface::parser parse;
+    details::Date date = interface::parser::get_field<details::Date>(weather_data);
+    std::cout << date << '\n';
+    details::Temperature temp = interface::parser::get_field<details::Temperature>(weather_data);
+    std::cout << temp << '\n';
+
+//    driver = sql::mysql::get_mysql_driver_instance();
+//    con = driver->connect("localhost", "user", "20021212");
+//    stmt = con->createStatement();
 
 //    using namespace fmt::literals;
 //    stmt->execute("use Data;");
 //    stmt->execute(fmt::format("insert into Weather(Date, Temp) values(\"{date}\", 37.7);", "date"_a = date_request::result()));
 
-    delete stmt;
-    delete con;
+      ioc.run();
+//    delete stmt;
+//    delete con;
 }

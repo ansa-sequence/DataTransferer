@@ -5,11 +5,13 @@ set(CMAKE_CXX_STANDARD 20)
 set(CMAKE_CXX_FLAGS "-std=gnu++2a -Wall -Werror -Wpedantic -pthread")
 #set(CMAKE_CXX_COMPILER           "/usr/bin/gcc-10.exe")
 
-add_executable(DataTransfer main.cpp requests.h http_req.hpp data.hpp)
+add_executable(DataTransfer main.cpp http_req.hpp data.hpp json_converter.hpp)
 
+find_package( Boost 1.73.0 COMPONENTS date_time)
 find_package(fmt)
-#find_package(nlohmann_json 3.2.0 REQUIRED)
+
+target_include_directories(DataTransfer PUBLIC ${Boost_INCLUDE_DIRS})
 
 target_link_libraries(DataTransfer fmt::fmt)
-#target_link_libraries(DataTransfer PRIVATE nlohmann_json::nlohmann_json)
 target_link_libraries(DataTransfer mysqlcppconn)
+target_link_libraries(DataTransfer ${Boost_DATE_TIME_LIBRARY})
