@@ -18,7 +18,8 @@
  */
 
 #include "data.hpp"
-#include "json.hpp"
+
+#include <nlohmann/json.hpp>
 
 
 namespace interface{
