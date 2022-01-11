@@ -24,7 +24,7 @@ int main() {
     using json = nlohmann::json;
 
     boost::asio::io_context ioc;
-    mowafi::Http_Client client("api.openweathermap.org", "/data/2.5/weather?q=London,uk&appid=1a56d882d9fa61dc0b5f7049cda3b0bc", 80, ioc);
+    mowafi::Http_Client client("api.openweathermap.org", "//", 80, ioc);
     client.create_request();
     client.write();
 
